@@ -6,7 +6,11 @@ class CustomUser(AbstractUser):
         ('user', 'User'),
         ('mentor', 'Mentor'),
     )
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default='user'
+    )
     
     phone_number = models.CharField(
         max_length=10, 
@@ -14,6 +18,8 @@ class CustomUser(AbstractUser):
         null=True, 
         unique=True, 
     )
+
+    previous_experience = models.BooleanField(blank=True, null=True)
     
     def __str__(self):
         return self.username

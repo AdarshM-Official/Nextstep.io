@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from .forms import *
 
 def auth_view(request):
     signup_form = CustomUserCreationForm()
@@ -39,10 +39,54 @@ def auth_view(request):
         'login_form': login_form
     })
 
+# Mentor Login and Signup views can be added similarly if needed
+
+def mentor_auth_view(request):
+    mentor_signup = MentorCreationForm()
+    mentor_login = MentorLoginForm(request)
+
+    if request.method == 'POST':
+        if 'mentor_submit' in request.POST:
+            mentor_signup = MentorCreationForm(request.POST)
+            if mentor_signup.is_valid():
+                user = mentor_signup.save(commit=False) 
+                user.role = 'mentor' 
+                user.save() 
+                
+                messages.success(request, "Mentor account created successfully! You can now log in.")
+                mentor_signup = MentorCreationForm() 
+            else:
+                messages.error(request, "Signup failed. Please fix the errors below.")
+
+        elif 'mlogin_submit' in request.POST:
+            mentor_login = MentorLoginForm(request, data=request.POST)
+            if mentor_login.is_valid():
+                user = mentor_login.get_user()
+                if user:
+                    role = getattr(user, 'role', 'user')
+                    if user.is_superuser:
+                        login(request, user)
+                        return redirect('admin_dashboard')
+                    elif role == 'mentor':
+                        login(request, user)
+                        return redirect('mentor_dashboard')
+                    else:
+                        messages.error(request, "This account is not a Mentor account. Please use the general login.")
+                else:
+                    messages.error(request, "Invalid username or password.")
+            else:
+                messages.error(request, "Invalid username or password.")
+
+    return render(request, 'registration/mentor_registration.html', {
+        'mentor_signup': mentor_signup,
+        'mentor_login': mentor_login
+    })
+
 
 @login_required
 def user_dashboard(request):
     return render(request, 'dashboard/user_dashboard.html')
+
 
 @login_required
 def mentor_dashboard(request):

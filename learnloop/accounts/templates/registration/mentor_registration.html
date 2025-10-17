@@ -6,10 +6,29 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="message-container">
+    {% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+                <!-- Dynamically set class based on message tags for pre-defined CSS colors -->
+                <!-- The message.tags logic ensures 'error' uses red/error styling and all others (success, info, warning) use green/success styling -->
+                <li class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register as Mentor</button>
+        {{ mentor_signup.as_p }}
+        <button type="submit" name="mentor_submit">Register as Mentor</button>
+    </form>
+    <form method="post">
+        {% csrf_token %}
+        {{ mentor_login.as_p }}
+        <button type="submit" name="mlogin_submit">Login as Mentor</button>
     </form>
 </body>
 </html>
