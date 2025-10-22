@@ -20,6 +20,8 @@ class CustomUser(AbstractUser):
     )
 
     previous_experience = models.BooleanField(blank=True, null=True)
+
+    is_approved=models.BooleanField(default=False)
     
     def __str__(self):
         return self.username

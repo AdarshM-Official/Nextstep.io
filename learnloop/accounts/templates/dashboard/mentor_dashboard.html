@@ -98,7 +98,7 @@
                     <i class="fas fa-chart-line me-2"></i> Dashboard
                 </a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
-                    <i class="fas fa-users me-2"></i> Mentees
+                    <i class="fas fa-users me-2"></i> Mentors
                 </a>
                 <a href="#" class="list-group-item list-group-item-action bg-dark text-white">
                     <i class="fas fa-calendar-alt me-2"></i> Schedule
@@ -146,8 +146,8 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="card bg-primary text-white shadow h-100">
                             <div class="card-body">
-                                <h5 class="card-title"><i class="fas fa-users"></i> Total Mentees</h5>
-                                <p class="card-text fs-3" id="totalMentees">12</p>
+                                <h5 class="card-title"><i class="fas fa-users"></i> Total Mentors</h5>
+                                <p class="card-text fs-3" id="totalMentors">12</p>
                             </div>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                             </div>
                             <div class="card-body chart-container-height"> 
                                 <canvas id="menteeProgressChart"></canvas> 
-                                <p class="text-muted mt-3 small">Goal completion percentage for your current mentees.
+                                <p class="text-muted mt-3 small">Goal completion percentage for your current Mentors.
                                 </p>
                             </div>
                         </div>
@@ -280,7 +280,7 @@
 
         // Static placeholder data (replace with Django variables in live code)
         const menteeData = {
-            mentees: ['Alex Johnson', 'Sarah Lee', 'Mark Chen', 'David Smith'],
+            Mentors: ['Alex Johnson', 'Sarah Lee', 'Mark Chen', 'David Smith'],
             progress: [85, 45, 95, 30] // Goal Completion Percentage
         };
 
@@ -288,7 +288,7 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: menteeData.mentees,
+                    labels: menteeData.Mentors,
                     datasets: [{
                         label: 'Goal Completion (%)',
                         data: menteeData.progress,

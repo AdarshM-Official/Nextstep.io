@@ -49,12 +49,12 @@ def mentor_auth_view(request):
         if 'mentor_submit' in request.POST:
             mentor_signup = MentorCreationForm(request.POST)
             if mentor_signup.is_valid():
-                user = mentor_signup.save(commit=False) 
-                user.role = 'mentor' 
-                user.save() 
-                
-                messages.success(request, "Mentor account created successfully! You can now log in.")
-                mentor_signup = MentorCreationForm() 
+                user = mentor_signup.save(commit=False)
+                user.role = 'mentor'
+                user.is_approved = False  # 🚫 Not approved yet
+                user.save()
+                messages.success(request, "Mentor account created! Wait for admin approval before logging in.")
+                mentor_signup = MentorCreationForm()               
             else:
                 messages.error(request, "Signup failed. Please fix the errors below.")
 
@@ -68,6 +68,9 @@ def mentor_auth_view(request):
                         login(request, user)
                         return redirect('admin_dashboard')
                     elif role == 'mentor':
+                        if not user.is_approved:
+                            messages.error(request, "Your account is awaiting admin approval. Try Signing in after 15-30 mins. Thank you")
+                            return redirect('mentor_auth')
                         login(request, user)
                         return redirect('mentor_dashboard')
                     else:
@@ -90,7 +93,11 @@ def user_dashboard(request):
 
 @login_required
 def mentor_dashboard(request):
+    if request.user.role == 'mentor' and not request.user.is_approved:
+        messages.error(request, "You must be approved by admin to access the mentor dashboard.")
+        return redirect('mentor_auth')
     return render(request, 'dashboard/mentor_dashboard.html')
+
 
 @login_required
 def admin_dashboard(request):
