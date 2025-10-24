@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
         null=True, 
         unique=True,
         help_text='Enter 10 digit phone number'
+        
     )
 
     previous_experience = models.BooleanField(blank=True, null=True)
