@@ -45,13 +45,23 @@
             font-weight: 700;
         }
 
+        /* ------------------------------------------- */
+        /* NEW FLOATING MESSAGE STYLES                 */
+        /* ------------------------------------------- */
         .message-container {
+            /* Making it floating and fixed */
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
             width: 100%;
             max-width: 900px;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Remove old margin */
             box-sizing: border-box;
+            padding: 0 16px; /* Padding for mobile view */
         }
-
+        
         .message-list {
             list-style: none;
             padding: 0;
@@ -64,9 +74,20 @@
             border-radius: 8px;
             font-weight: 500;
             line-height: 1.4;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            /* Using a slightly stronger shadow for floating elements */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
             display: flex;
             align-items: center;
+            
+            /* Add transition for fading */
+            opacity: 1;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        /* State for fading out */
+        .message-list li.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
         }
 
         .message-list li::before {
@@ -240,7 +261,7 @@
 </head>
 <body>
 
-<h1 class="page-header">Authentication Center</h1>
+<!-- <h1 class="page-header">Authentication Center</h1> -->
 
 <div class="message-container">
     {% if messages %}
@@ -281,5 +302,35 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+            const messageList = document.querySelector('.message-list');
+
+            if (messageList) {
+                const messages = messageList.querySelectorAll('li');
+                
+                messages.forEach((message, index) => {
+                    // Set a staggered timer (4000ms + index * 100ms) for each message
+                    const delay = 4000 + (index * 100); 
+
+                    setTimeout(() => {
+                        // 1. Add class to start the CSS fade-out transition
+                        message.classList.add('fade-out');
+                        
+                        // 2. Remove the element from the DOM after the transition finishes (0.5s)
+                        message.addEventListener('transitionend', () => {
+                            message.remove();
+                            
+                            // Optional: Remove the whole message container if all messages are gone
+                            if (messageList.children.length === 0) {
+                                messageList.remove();
+                            }
+                        });
+
+                    }, delay);
+                });
+            }
+        });
+</script>
 </body>
 </html>
