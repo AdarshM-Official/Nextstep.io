@@ -5,6 +5,7 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('user', 'User'),
         ('mentor', 'Mentor'),
+        ('Admin', 'Admin'),
     )
     role = models.CharField(
         max_length=10,
@@ -14,9 +15,10 @@ class CustomUser(AbstractUser):
     
     phone_number = models.CharField(
         max_length=10, 
-        blank=False, 
+        blank=True, 
         null=True, 
-        unique=True, 
+        unique=True,
+        help_text='Enter 10 digit phone number'
     )
 
     previous_experience = models.BooleanField(blank=True, null=True)

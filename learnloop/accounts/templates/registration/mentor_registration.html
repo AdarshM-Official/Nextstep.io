@@ -249,7 +249,7 @@
             align-items: center;
         }
         /* Hidden from default view for now */
-        .messages { display: none; } 
+        /* .messages { display: none; }  */
 
     </style>
 </head>
@@ -275,7 +275,7 @@
                 <button type="submit" name="mentor_submit">Register</button>
             </form>
 
-            <p class="footer-link">Already a mentor? <a href="#">Log in here</a>.</p>
+            <p class="footer-link">Already a mentor? <a href="{% url 'auth' %}">Log in here</a>.</p>
         </div>
 
         <div class="right-panel">

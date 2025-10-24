@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import *
+from django.http import HttpResponseForbidden
+from .models import CustomUser
+from django.shortcuts import get_object_or_404
 
 def auth_view(request):
     signup_form = CustomUserCreationForm()
@@ -21,10 +24,10 @@ def auth_view(request):
         elif 'login_submit' in request.POST:
             login_form = CustomAuthenticationForm(request, data=request.POST)
             if login_form.is_valid():
-                user = login_form.get_user()  # safer than authenticate manually
+                user = login_form.get_user()  
                 if user:
                     login(request, user)
-                    role = getattr(user, 'role', 'user')  # default fallback
+                    role = getattr(user, 'role', 'user')  
                     if user.is_superuser:
                         return redirect('admin_dashboard')
                     elif role == 'mentor':
@@ -39,7 +42,7 @@ def auth_view(request):
         'login_form': login_form
     })
 
-# Mentor Login and Signup views can be added similarly if needed
+
 
 def mentor_auth_view(request):
     mentor_signup = MentorCreationForm()
@@ -51,7 +54,7 @@ def mentor_auth_view(request):
             if mentor_signup.is_valid():
                 user = mentor_signup.save(commit=False)
                 user.role = 'mentor'
-                user.is_approved = False  # 🚫 Not approved yet
+                user.is_approved = False  
                 user.save()
                 messages.success(request, "Mentor account created! Wait for admin approval before logging in.")
                 mentor_signup = MentorCreationForm()               
@@ -101,4 +104,40 @@ def mentor_dashboard(request):
 
 @login_required
 def admin_dashboard(request):
-    return render(request, 'dashboard/admin_dashboard.html')
+    if request.user.is_superuser == False:
+        return HttpResponseForbidden("Not allowed here.")
+    
+    all_mentors = CustomUser.objects.filter(role='mentor')
+    users = CustomUser.objects.filter(role='user')
+    
+    context = {
+        'mentors': all_mentors.filter(is_approved=False),
+        'approved_mentors_count': all_mentors.filter(is_approved=True).count(),
+        'total_mentors_count': all_mentors.count(),
+        'all_mentors': all_mentors,
+        'users': users,
+    }
+    return render(request, 'dashboard/admin_dashboard.html', context)
+
+
+
+def approve_mentor(request, mentor_id):
+    if request.user.is_superuser == False:
+        return HttpResponseForbidden("Not allowed")
+    mentor = get_object_or_404(CustomUser, id=mentor_id, role='mentor')
+    mentor.is_approved = True
+    mentor.save()
+    messages.success(request, f"{mentor.username} has been approved!")
+    return redirect('admin_dashboard')
+
+@login_required
+def delete_mentor(request, mentor_id):
+    # Only allow Admin role
+    if request.user.is_superuser == False:
+        return HttpResponseForbidden("You are not allowed here.")
+
+    mentor = get_object_or_404(CustomUser, id=mentor_id, role='mentor')
+    mentor_username = mentor.username
+    mentor.delete()
+    messages.success(request, f"Mentor '{mentor_username}' has been deleted successfully!")
+    return redirect('admin_dashboard')

@@ -9,4 +9,10 @@ urlpatterns = [
     # Mentor related paths
     path('mentor/dashboard/', views.mentor_dashboard, name='mentor_dashboard'),
     path('mentor/auth/', views.mentor_auth_view, name='mentor_auth'),
+    
+    # admin mentor approval
+     path('dashboard/admin/approve/<int:mentor_id>/', views.approve_mentor, name='approve_mentor'),
+     # Delete mentor URL
+    path('dashboard/admin/delete/<int:mentor_id>/', views.delete_mentor, name='delete_mentor'),
+
 ]
