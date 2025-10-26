@@ -6,11 +6,11 @@
     <title>User Authentication</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Basic Reset and Body Styles */
+        /* --- Root Variables & Basic Styles --- */
         :root {
             --primary-color: #5d56f9; /* Vibrant Blue/Violet */
             --primary-hover: #4a45c4;
-            --background-color: #f0f2f5; /* Light Gray Background */
+            --background-color: #afc0dc; /* Light Gray Background */
             --card-background: #ffffff;
             --text-color: #333333;
             --subtle-text: #6b7280;
@@ -24,6 +24,8 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
+            background: url('../../../static/images/loginbg.png');
+            background-size: contain;
             color: var(--text-color);
             margin: 0;
             padding: 0;
@@ -31,25 +33,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Center content vertically */
+            justify-content: center;
             padding: 30px 10px;
             box-sizing: border-box;
         }
 
-        /* --- Global Container & Message Styling --- */
-        .page-header {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--text-color);
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        /* ------------------------------------------- */
-        /* NEW FLOATING MESSAGE STYLES                 */
-        /* ------------------------------------------- */
+        /* --- Message Styling --- */
         .message-container {
-            /* Making it floating and fixed */
             position: fixed;
             top: 20px;
             left: 50%;
@@ -57,9 +47,8 @@
             z-index: 1000;
             width: 100%;
             max-width: 900px;
-            margin-bottom: 0; /* Remove old margin */
             box-sizing: border-box;
-            padding: 0 16px; /* Padding for mobile view */
+            padding: 0 16px;
         }
         
         .message-list {
@@ -73,25 +62,20 @@
             margin-bottom: 10px;
             border-radius: 8px;
             font-weight: 500;
-            line-height: 1.4;
-            /* Using a slightly stronger shadow for floating elements */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
             display: flex;
             align-items: center;
-            
-            /* Add transition for fading */
             opacity: 1;
             transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         
-        /* State for fading out */
         .message-list li.fade-out {
             opacity: 0;
             transform: translateY(-20px);
         }
 
         .message-list li::before {
-            content: '✓'; /* Checkmark for success */
+            content: '✓'; 
             margin-right: 10px;
             font-size: 1.2rem;
             line-height: 1;
@@ -110,37 +94,56 @@
         }
 
         .message-list li.error::before {
-            content: '✕'; /* X for error */
+            content: '✕'; 
         }
-        /* --- End Message Styling --- */
 
-        /* Wrapper for Side-by-Side Layout */
+        /* ------------------------------------------- */
+        /* SLIDING AUTH STYLES                         */
+        /* ------------------------------------------- */
+
+        /* The Window/Viewport */
         .main-forms-wrapper {
-            display: flex;
-            gap: 40px; /* Increased space for visual separation */
-            justify-content: center;
-            align-items: stretch; /* Ensures forms stretch to the same height */
+            display: block;
             width: 100%;
-            max-width: 900px; 
+            /* ADJUSTED: Wider container size for forms */
+            max-width: 600px; 
             margin-top: 20px;
+            position: relative;
+            overflow: hidden; 
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            background-color: var(--card-background); 
+            transition: height 0.4s ease-in-out; 
+        }
+        
+        /* The Sliding Track */
+        .form-slider {
+            display: flex; 
+            width: 200%; /* Must be 100% * 2 forms */
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        
+        /* Slide to Signup */
+        .form-slider.slide-left {
+            transform: translateX(-50%);
         }
 
-        /* Individual Form Container */
+        /* The Individual Form Panel */
         .auth-container {
-            background-color: var(--card-background);
-            padding: 40px; /* Increased padding */
-            border-radius: 12px; /* Softer rounded corners */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* More subtle, elevated shadow */
-            flex: 1; 
-            min-width: 350px; 
-            transition: transform 0.3s ease-in-out;
+            background-color: transparent; 
+            padding: 40px; 
+            border-radius: 0; 
+            box-shadow: none; 
+            flex: 0 0 50%; /* Each panel takes exactly half of the 200% width */
+            width: 50%;
+            box-sizing: border-box;
+            min-width: unset; 
+            height: 80vh;
+            overflow-y: auto;
+            transition: none; 
         }
-        
-        .auth-container:hover {
-            transform: translateY(-2px);
-        }
-        
-        /* Headings */
+
+        /* --- Form Elements --- */
         h2 {
             text-align: center;
             color: var(--text-color);
@@ -150,8 +153,7 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
         }
-
-        /* Form Styling (Assumes fields are wrapped in <p> tags) */
+        
         form p {
             margin-bottom: 20px;
             display: flex;
@@ -165,7 +167,6 @@
             font-size: 0.95rem;
         }
 
-        /* Input and Textarea Fields */
         .auth-container input:not([type="submit"]):not([type="button"]) {
             width: 100%;
             padding: 12px;
@@ -174,18 +175,17 @@
             box-sizing: border-box; 
             transition: border-color 0.3s, box-shadow 0.3s;
             font-size: 1rem;
-            background-color: var(--background-color);
+            background-color: rgb(227, 224, 224);
             color: var(--text-color);
         }
         
         .auth-container input:focus {
             border-color: var(--primary-color);
             outline: none;
-            background-color: var(--card-background); /* White background on focus */
+            background-color: var(--card-background); 
             box-shadow: 0 0 0 1px var(--primary-color);
         }
 
-        /* Buttons */
         .form-actions {
             margin-top: 30px;
         }
@@ -213,7 +213,27 @@
             transform: scale(0.99);
         }
         
-        /* Extra Links */
+        /* Toggle Link for Sliding */
+        .toggle-form-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .toggle-form-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .toggle-form-link a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        
+        /* Mentor/Extra Links */
         .extra-links {
             text-align: center;
             margin-top: 30px;
@@ -232,17 +252,11 @@
             text-decoration: underline;
         }
 
-        /* Responsive design: Stack forms vertically on small screens */
-        @media (max-width: 960px) {
+        /* Responsive design */
+        @media (max-width: 620px) {
             .main-forms-wrapper {
-                max-width: 600px;
-                flex-direction: column; 
-                gap: 30px;
-            }
-            
-            .auth-container {
-                max-width: 100%; 
-                min-width: unset;
+                max-width: 100%;
+                margin: 20px;
             }
         }
         
@@ -261,8 +275,6 @@
 </head>
 <body>
 
-<!-- <h1 class="page-header">Authentication Center</h1> -->
-
 <div class="message-container">
     {% if messages %}
         <ul class="message-list">
@@ -275,62 +287,121 @@
     {% endif %}
 </div>
 
-<div class="main-forms-wrapper">
-    
-    <div class="auth-container">
-        <h2>Join Us Today 🚀</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ signup_form.as_p }}
-            <div class="form-actions">
-                <button type="submit" name="signup_submit">Create Account</button>
+<div class="main-forms-wrapper" id="authWrapper">
+    <div class="form-slider" id="formSlider">
+        
+        <div class="auth-container" id="loginPanel">
+            <h2>Welcome Back 👋</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <div class="form-actions">
+                    <button type="submit" name="login_submit">Sign In Securely</button>
+                </div>
+            </form>
+            <div class="toggle-form-link">
+                <a href="#" id="switchToSignup">New here? Create an account.</a>
             </div>
-        </form>
-    </div>
-    
-    <div class="auth-container">
-        <h2>Welcome Back 👋</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ login_form.as_p }}
-            <div class="form-actions">
-                <button type="submit" name="login_submit">Sign In Securely</button>
+            <div class="extra-links">
+                <a href="{% url 'mentor_auth' %}">Are you a Mentor? Sign in here.</a>
             </div>
-        </form>
-        <div class="extra-links">
-            <a href="{% url 'mentor_auth' %}">Are you a Mentor? Sign in here.</a>
+        </div>
+
+        <div class="auth-container" id="signupPanel">
+            <h2>Join Us Today 🚀</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ signup_form.as_p }}
+                <div class="form-actions">
+                    <button type="submit" name="signup_submit">Create Account</button>
+                </div>
+            </form>
+            <div class="toggle-form-link">
+                <a href="#" id="switchToLogin">Already have an account? Sign In.</a>
+            </div>
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-            const messageList = document.querySelector('.message-list');
+        const formSlider = document.getElementById('formSlider');
+        const switchToSignupLink = document.getElementById('switchToSignup');
+        const switchToLoginLink = document.getElementById('switchToLogin');
+        const authWrapper = document.getElementById('authWrapper');
+        const loginPanel = document.getElementById('loginPanel');
+        const signupPanel = document.getElementById('signupPanel');
 
-            if (messageList) {
-                const messages = messageList.querySelectorAll('li');
-                
-                messages.forEach((message, index) => {
-                    // Set a staggered timer (4000ms + index * 100ms) for each message
-                    const delay = 4000 + (index * 100); 
+        // Function to smoothly adjust the wrapper's height to match the current panel
+        const updateWrapperHeight = (targetPanel) => {
+            // Set a fixed height before resizing to prevent content jump
+            authWrapper.style.height = `${authWrapper.clientHeight}px`; 
+            
+            const targetHeight = targetPanel.clientHeight;
+            
+            // Apply the new height with a transition
+            requestAnimationFrame(() => {
+                authWrapper.style.height = `${targetHeight}px`;
+            });
 
-                    setTimeout(() => {
-                        // 1. Add class to start the CSS fade-out transition
-                        message.classList.add('fade-out');
+            // Remove the fixed height after the transition
+            setTimeout(() => {
+                authWrapper.style.height = 'auto';
+            }, 400); 
+        };
+        
+        // Initial height setting based on the default panel (login)
+        if (loginPanel) {
+            updateWrapperHeight(loginPanel); 
+        }
+
+        // Event listener for sliding to the Signup panel
+        if (switchToSignupLink) {
+            switchToSignupLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                formSlider.classList.add('slide-left');
+                updateWrapperHeight(signupPanel);
+            });
+        }
+
+        // Event listener for sliding back to the Login panel
+        if (switchToLoginLink) {
+            switchToLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                formSlider.classList.remove('slide-left');
+                updateWrapperHeight(loginPanel);
+            });
+        }
+
+
+        /* Message Fade-out Script */
+        const messageList = document.querySelector('.message-list');
+
+        if (messageList) {
+            const messages = messageList.querySelectorAll('li');
+            
+            messages.forEach((message, index) => {
+                // Staggered timer for each message
+                const delay = 4000 + (index * 100); 
+
+                setTimeout(() => {
+                    // Start CSS fade-out transition
+                    message.classList.add('fade-out');
+                    
+                    // Remove element after transition completes (0.5s)
+                    message.addEventListener('transitionend', () => {
+                        message.remove();
                         
-                        // 2. Remove the element from the DOM after the transition finishes (0.5s)
-                        message.addEventListener('transitionend', () => {
-                            message.remove();
-                            
-                            // Optional: Remove the whole message container if all messages are gone
-                            if (messageList.children.length === 0) {
-                                messageList.remove();
-                            }
-                        });
+                        // Clean up the container if all messages are gone
+                        if (messageList.children.length === 0) {
+                            messageList.remove();
+                        }
+                    });
 
-                    }, delay);
-                });
-            }
-        });
+                }, delay);
+            });
+        }
+    });
 </script>
 </body>
 </html>
