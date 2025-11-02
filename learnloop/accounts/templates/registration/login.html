@@ -104,7 +104,9 @@ box-sizing: border-box; /* Include padding in height calculation */
 .sign-up-container { 
     left: 0; opacity: 0; z-index: 1; min-height: 100%; 
 }
-
+.form-container::-webkit-scrollbar {
+    display: none;
+}
 /* Buttons, text, inputs */
 form {
     background: var(--card-background);
@@ -122,6 +124,7 @@ input {
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background: var(--input-bg);
+    margin-left: -10px;
 }
 button {
     border-radius: 25px;
@@ -166,8 +169,8 @@ button:hover {
     height: 100%;
     width: 50%;
 }
-.overlay-left { transform: translateX(-20%); }
-.overlay-right { right: 0; }
+.overlay-left { transform: translateX(-8%); }
+.overlay-right { right: 0; transform: translateX(7%);}
 
 /* Animations */
 .container.right-panel-active .sign-in-container { transform: translateX(100%); }
@@ -195,6 +198,7 @@ button:hover {
     .container.right-panel-active .sign-in-container { opacity: 0; }
     .container.right-panel-active .sign-up-container { opacity: 1; }
 }
+
 </style>
 </head>
 
@@ -213,14 +217,14 @@ button:hover {
 
 <!-- Sign Up -->
 <div class="form-container sign-up-container" id="signupFormContainer">
-<form method="post">
+<form method="post" class="loginnn"">
 <h2>Create Account</h2>
 {% csrf_token %}
 {% if signup_form.non_field_errors %}
 <div class="non-field-errors">{{ signup_form.non_field_errors }}</div>
 {% endif %}
 {{ signup_form.as_p }}
-<button type="submit" name="signup_submit">Sign Up</button>
+<button type="submit" name="signup_submit">Sign Up</button><br>
 <a href="#" class="mobile-toggle" id="mobileSignIn">Already have an account? Sign In</a>
 </form>
 </div>
