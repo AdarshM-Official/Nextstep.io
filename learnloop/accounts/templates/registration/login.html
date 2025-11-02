@@ -5,403 +5,275 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Authentication</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* --- Root Variables & Basic Styles --- */
-        :root {
-            --primary-color: #5d56f9; /* Vibrant Blue/Violet */
-            --primary-hover: #4a45c4;
-            --background-color: #afc0dc; /* Light Gray Background */
-            --card-background: #ffffff;
-            --text-color: #333333;
-            --subtle-text: #6b7280;
-            --border-color: #e5e7eb;
-            --success-bg: #dcfce7;
-            --success-text: #166534;
-            --error-bg: #fee2e2;
-            --error-text: #991b1b;
-        }
+<style>
+/* --- Root Variables & Basic Styles --- */
+:root {
+    --primary-color: #00AEEF; 
+    --primary-hover: #0072F0;
+    --primary-gradient: linear-gradient(90deg, #00AEEF 0%, #0072F0 100%);
+    --background-color: #f6f5f7;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --subtle-text: #6b7280;
+    --border-color: #e5e7eb;
+    --input-bg: #f3f4f6;
+    --success-bg: #dcfce7;
+    --success-text: #166534;
+    --error-bg: #fee2e2;
+    --error-text: #991b1b;
+}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            background: url('../../../static/images/loginbg.png');
-            background-size: contain;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 10px;
-            box-sizing: border-box;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px 10px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        /* --- Message Styling --- */
-        .message-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: 100%;
-            max-width: 900px;
-            box-sizing: border-box;
-            padding: 0 16px;
-        }
-        
-        .message-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+/* --- Message Styling --- */
+.message-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    padding: 0 16px;
+    z-index: 1000;
+}
+.message-list { list-style: none; padding: 0; margin: 0; }
+.message-list li {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    opacity: 1;
+    transition: opacity .5s, transform .5s;
+}
+.message-list li.fade-out { opacity: 0; transform: translateY(-20px); }
+.message-list li.success { background: var(--success-bg); color: var(--success-text); }
+.message-list li.error { background: var(--error-bg); color: var(--error-text); }
 
-        .message-list li {
-            padding: 12px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-            display: flex;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-        
-        .message-list li.fade-out {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
+/* --- Auth Container --- */
+.container {
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.18);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 850px;
 
-        .message-list li::before {
-            content: '✓'; 
-            margin-right: 10px;
-            font-size: 1.2rem;
-            line-height: 1;
-        }
+    /* FIX ADDED: allow content expansion */
+    height: auto;
+    max-height: none;
+    min-height: 600px;
+}
 
-        .message-list li.success {
-            background-color: var(--success-bg);
-            color: var(--success-text);
-            border: 1px solid #bbf7d0;
-        }
+/* Form containers */
+.form-container {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    padding: 20px 0;
+    box-sizing: border-box;
+    
+    /* FIX ADDED: real scrolling + form height */
+    overflow-y: auto;
+    height: 100%;
+    min-height: 100%;
+}
 
-        .message-list li.error {
-            background-color: var(--error-bg);
-            color: var(--error-text);
-            border: 1px solid #fca5a5;
-        }
+.sign-in-container {
+    left: 0; z-index: 2; 
+ }
+.sign-in-container form {
+height: 100%;
+justify-content: center;
+padding: 0 40px; /* Override padding for true centering */
+box-sizing: border-box; /* Include padding in height calculation */
+}
+.sign-up-container { 
+    left: 0; opacity: 0; z-index: 1; min-height: 100%; 
+}
 
-        .message-list li.error::before {
-            content: '✕'; 
-        }
+/* Buttons, text, inputs */
+form {
+    background: var(--card-background);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px 50px;
+}
+form p { width: 100%; margin-bottom: 15px; }
 
-        /* ------------------------------------------- */
-        /* SLIDING AUTH STYLES                         */
-        /* ------------------------------------------- */
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+}
+button {
+    border-radius: 25px;
+    border: 1px solid var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 45px;
+    cursor: pointer;
+}
+button:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
 
-        /* The Window/Viewport */
-        .main-forms-wrapper {
-            display: block;
-            width: 100%;
-            /* ADJUSTED: Wider container size for forms */
-            max-width: 600px; 
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden; 
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            background-color: var(--card-background); 
-            transition: height 0.4s ease-in-out; 
-        }
-        
-        /* The Sliding Track */
-        .form-slider {
-            display: flex; 
-            width: 200%; /* Must be 100% * 2 forms */
-            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
-        }
-        
-        /* Slide to Signup */
-        .form-slider.slide-left {
-            transform: translateX(-50%);
-        }
+/* Overlay setup */
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: .6s;
+    z-index: 100;
+}
+.overlay {
+    background: var(--primary-gradient);
+    color: white;
+    position: relative;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    transition: .6s;
+}
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding: 0 40px;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+}
+.overlay-left { transform: translateX(-20%); }
+.overlay-right { right: 0; }
 
-        /* The Individual Form Panel */
-        .auth-container {
-            background-color: transparent; 
-            padding: 40px; 
-            border-radius: 0; 
-            box-shadow: none; 
-            flex: 0 0 50%; /* Each panel takes exactly half of the 200% width */
-            width: 50%;
-            box-sizing: border-box;
-            min-width: unset; 
-            height: 80vh;
-            overflow-y: auto;
-            transition: none; 
-        }
+/* Animations */
+.container.right-panel-active .sign-in-container { transform: translateX(100%); }
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+}
+.container.right-panel-active .overlay-container { transform: translateX(-100%); }
+.container.right-panel-active .overlay { transform: translateX(50%); }
 
-        /* --- Form Elements --- */
-        h2 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 30px;
-            font-weight: 600;
-            font-size: 1.8rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-        
-        form p {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        form label {
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: var(--subtle-text);
-            font-size: 0.95rem;
-        }
-
-        .auth-container input:not([type="submit"]):not([type="button"]) {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            box-sizing: border-box; 
-            transition: border-color 0.3s, box-shadow 0.3s;
-            font-size: 1rem;
-            background-color: rgb(227, 224, 224);
-            color: var(--text-color);
-        }
-        
-        .auth-container input:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            background-color: var(--card-background); 
-            box-shadow: 0 0 0 1px var(--primary-color);
-        }
-
-        .form-actions {
-            margin-top: 30px;
-        }
-        
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.05rem;
-            font-weight: 600;
-            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
-            letter-spacing: 0.5px;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-            box-shadow: 0 4px 15px rgba(93, 86, 249, 0.3);
-        }
-
-        button:active {
-            transform: scale(0.99);
-        }
-        
-        /* Toggle Link for Sliding */
-        .toggle-form-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .toggle-form-link a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .toggle-form-link a:hover {
-            color: var(--primary-hover);
-            text-decoration: underline;
-        }
-        
-        /* Mentor/Extra Links */
-        .extra-links {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .extra-links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .extra-links a:hover {
-            color: var(--primary-hover);
-            text-decoration: underline;
-        }
-
-        /* Responsive design */
-        @media (max-width: 620px) {
-            .main-forms-wrapper {
-                max-width: 100%;
-                margin: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: 25px;
-            }
-            h2 {
-                font-size: 1.5rem;
-            }
-            body {
-                padding: 10px;
-            }
-        }
-    </style>
+/* Mobile */
+@media (max-width: 768px) {
+    .container {
+        width: 95vw;
+        border-radius: 10px;
+        min-height: auto;
+    }
+    .form-container {
+        width: 100%;
+        position: relative;
+        overflow-y: auto;
+    }
+    .overlay-container { display: none; }
+    .container.right-panel-active .sign-in-container { opacity: 0; }
+    .container.right-panel-active .sign-up-container { opacity: 1; }
+}
+</style>
 </head>
-<body>
 
+<body>
 <div class="message-container">
-    {% if messages %}
-        <ul class="message-list">
-            {% for message in messages %}
-                <li class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">
-                    {{ message }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% if messages %}
+<ul class="message-list">
+{% for message in messages %}
+<li class="{% if message.tags == 'error' %}error{% else %}success{% endif %}">{{ message }}</li>
+{% endfor %}
+</ul>
+{% endif %}
 </div>
 
-<div class="main-forms-wrapper" id="authWrapper">
-    <div class="form-slider" id="formSlider">
-        
-        <div class="auth-container" id="loginPanel">
-            <h2>Welcome Back 👋</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ login_form.as_p }}
-                <div class="form-actions">
-                    <button type="submit" name="login_submit">Sign In Securely</button>
-                </div>
-            </form>
-            <div class="toggle-form-link">
-                <a href="#" id="switchToSignup">New here? Create an account.</a>
-            </div>
-            <div class="extra-links">
-                <a href="{% url 'mentor_auth' %}">Are you a Mentor? Sign in here.</a>
-            </div>
-        </div>
+<div class="container" id="container">
 
-        <div class="auth-container" id="signupPanel">
-            <h2>Join Us Today 🚀</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ signup_form.as_p }}
-                <div class="form-actions">
-                    <button type="submit" name="signup_submit">Create Account</button>
-                </div>
-            </form>
-            <div class="toggle-form-link">
-                <a href="#" id="switchToLogin">Already have an account? Sign In.</a>
-            </div>
-        </div>
-    </div>
+<!-- Sign Up -->
+<div class="form-container sign-up-container" id="signupFormContainer">
+<form method="post">
+<h2>Create Account</h2>
+{% csrf_token %}
+{% if signup_form.non_field_errors %}
+<div class="non-field-errors">{{ signup_form.non_field_errors }}</div>
+{% endif %}
+{{ signup_form.as_p }}
+<button type="submit" name="signup_submit">Sign Up</button>
+<a href="#" class="mobile-toggle" id="mobileSignIn">Already have an account? Sign In</a>
+</form>
+</div>
+
+<!-- Sign In -->
+<div class="form-container sign-in-container" id="loginFormContainer">
+<form method="post">
+<h2>Login</h2>
+{% csrf_token %}
+{% if login_form.non_field_errors %}
+<div class="non-field-errors">{{ login_form.non_field_errors }}</div>
+{% endif %}
+{{ login_form.as_p }}
+<button type="submit" name="login_submit">Sign In</button>
+<a href="#" class="mobile-toggle" id="mobileSignUp">Create account</a>
+</form>
+</div>
+
+<!-- Overlay -->
+<div class="overlay-container">
+<div class="overlay">
+<div class="overlay-panel overlay-left">
+<h1>Welcome Back!</h1>
+<button class="ghost" id="signIn">Sign In</button>
+</div>
+<div class="overlay-panel overlay-right">
+<h1>Hello!</h1>
+<button class="ghost" id="signUp">Sign Up</button>
+</div>
+</div>
+</div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const formSlider = document.getElementById('formSlider');
-        const switchToSignupLink = document.getElementById('switchToSignup');
-        const switchToLoginLink = document.getElementById('switchToLogin');
-        const authWrapper = document.getElementById('authWrapper');
-        const loginPanel = document.getElementById('loginPanel');
-        const signupPanel = document.getElementById('signupPanel');
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('container');
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const mobileSignUpButton = document.getElementById('mobileSignUp');
+    const mobileSignInButton = document.getElementById('mobileSignIn');
 
-        // Function to smoothly adjust the wrapper's height to match the current panel
-        const updateWrapperHeight = (targetPanel) => {
-            // Set a fixed height before resizing to prevent content jump
-            authWrapper.style.height = `${authWrapper.clientHeight}px`; 
-            
-            const targetHeight = targetPanel.clientHeight;
-            
-            // Apply the new height with a transition
-            requestAnimationFrame(() => {
-                authWrapper.style.height = `${targetHeight}px`;
-            });
+    const togglePanel = (e) => {
+        e.preventDefault();
+        container.classList.toggle('right-panel-active');
+        document.getElementById('signupFormContainer').scrollTop = 0;
+        document.getElementById('loginFormContainer').scrollTop = 0;
+    };
 
-            // Remove the fixed height after the transition
-            setTimeout(() => {
-                authWrapper.style.height = 'auto';
-            }, 400); 
-        };
-        
-        // Initial height setting based on the default panel (login)
-        if (loginPanel) {
-            updateWrapperHeight(loginPanel); 
-        }
-
-        // Event listener for sliding to the Signup panel
-        if (switchToSignupLink) {
-            switchToSignupLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                formSlider.classList.add('slide-left');
-                updateWrapperHeight(signupPanel);
-            });
-        }
-
-        // Event listener for sliding back to the Login panel
-        if (switchToLoginLink) {
-            switchToLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                formSlider.classList.remove('slide-left');
-                updateWrapperHeight(loginPanel);
-            });
-        }
-
-
-        /* Message Fade-out Script */
-        const messageList = document.querySelector('.message-list');
-
-        if (messageList) {
-            const messages = messageList.querySelectorAll('li');
-            
-            messages.forEach((message, index) => {
-                // Staggered timer for each message
-                const delay = 4000 + (index * 100); 
-
-                setTimeout(() => {
-                    // Start CSS fade-out transition
-                    message.classList.add('fade-out');
-                    
-                    // Remove element after transition completes (0.5s)
-                    message.addEventListener('transitionend', () => {
-                        message.remove();
-                        
-                        // Clean up the container if all messages are gone
-                        if (messageList.children.length === 0) {
-                            messageList.remove();
-                        }
-                    });
-
-                }, delay);
-            });
-        }
-    });
+    signUpButton && signUpButton.addEventListener('click', togglePanel);
+    signInButton && signInButton.addEventListener('click', togglePanel);
+    mobileSignUpButton && mobileSignUpButton.addEventListener('click', togglePanel);
+    mobileSignInButton && mobileSignInButton.addEventListener('click', togglePanel);
+});
 </script>
 </body>
 </html>
