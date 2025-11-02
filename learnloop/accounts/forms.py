@@ -77,7 +77,28 @@ class MentorCreationForm(UserCreationForm):
         # (Optional) Turn off the password confirmation help text
         if 'password2' in self.fields:
             self.fields['password2'].help_text = None
-            
+        
+        if 'phone_number' in self.fields:
+            self.fields['phone_number'].help_text = None
+        
+        self.fields['username'].widget.attrs.update(
+            {'placeholder': 'Username'}
+        )
+        self.fields['email'].widget.attrs.update(
+            {'placeholder': 'Email address'}
+        )
+        self.fields['phone_number'].widget.attrs.update(
+            {'placeholder': 'Phone number'}
+        )
+        self.fields['previous_experience'].widget.attrs.update(
+            {'placeholder': 'Previous Experience'}
+        )
+        self.fields['password1'].widget.attrs.update(
+            {'placeholder': 'Password'}
+        )
+        self.fields['password2'].widget.attrs.update(
+            {'placeholder': 'Repeat Password'}
+        )
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = 'mentor'
