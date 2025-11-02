@@ -234,8 +234,9 @@ button:hover {
 <div class="non-field-errors">{{ login_form.non_field_errors }}</div>
 {% endif %}
 {{ login_form.as_p }}
-<button type="submit" name="login_submit">Sign In</button>
-<a href="#" class="mobile-toggle" id="mobileSignUp">Create account</a>
+<button type="submit" name="login_submit">Sign In</button><br>
+<a href="#" class="mobile-toggle" id="mobileSignUp">Create account</a><br>
+<a href="{% url 'mentor_auth' %}">Mentor Registration</a>
 </form>
 </div>
 
