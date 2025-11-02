@@ -24,9 +24,8 @@ class CustomUser(AbstractUser):
         validators=[phone_regex],
         unique=True,
         help_text='Enter 10 digit phone number'
-        
     )
-
+        
     previous_experience = models.BooleanField(blank=True, null=True)
 
     is_approved=models.BooleanField(default=False)
