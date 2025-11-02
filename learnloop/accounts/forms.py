@@ -67,19 +67,26 @@ class MentorCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs) # Call the parent's init first
         
         # Turn off the username help text
-        if 'username' in self.fields:
-            self.fields['username'].help_text = None
+        # if 'username' in self.fields:
+        #     self.fields['username'].help_text = None
         
-        # Turn off the password bullet points (on 'password1')
-        if 'password1' in self.fields:
-            self.fields['password1'].help_text = None
+        # # Turn off the password bullet points (on 'password1')
+        # if 'password1' in self.fields:
+        #     self.fields['password1'].help_text = None
             
-        # (Optional) Turn off the password confirmation help text
-        if 'password2' in self.fields:
-            self.fields['password2'].help_text = None
+        # # (Optional) Turn off the password confirmation help text
+        # if 'password2' in self.fields:
+        #     self.fields['password2'].help_text = None
         
-        if 'phone_number' in self.fields:
-            self.fields['phone_number'].help_text = None
+        # if 'phone_number' in self.fields:
+        #     self.fields['phone_number'].help_text = None
+        
+        # Put the names of all fields you want to clear in a list
+        fields_to_clear = ['username', 'password1', 'password2', 'phone_number']
+        # Loop through the list and set help_text to None if the field exists
+        for field_name in fields_to_clear:
+            if field_name in self.fields:
+                self.fields[field_name].help_text = None
         
         self.fields['username'].widget.attrs.update(
             {'placeholder': 'Username'}
