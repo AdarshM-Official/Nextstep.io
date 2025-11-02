@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import *
 from django.http import HttpResponseForbidden
+from django.views.decorators.cache import never_cache
 from .models import CustomUser
 from django.shortcuts import get_object_or_404
 
@@ -88,12 +89,12 @@ def mentor_auth_view(request):
         'mentor_login': mentor_login
     })
 
-
+@never_cache
 @login_required
 def user_dashboard(request):
     return render(request, 'dashboard/user_dashboard.html')
 
-
+@never_cache
 @login_required
 def mentor_dashboard(request):
     if request.user.role == 'mentor' and not request.user.is_approved:
@@ -101,7 +102,7 @@ def mentor_dashboard(request):
         return redirect('mentor_auth')
     return render(request, 'dashboard/mentor_dashboard.html')
 
-
+@never_cache
 @login_required
 def admin_dashboard(request):
     if request.user.is_superuser == False:
