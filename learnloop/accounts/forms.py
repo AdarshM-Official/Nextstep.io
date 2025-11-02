@@ -14,24 +14,49 @@ class CustomUserCreationForm(UserCreationForm):
         # Turn off the username help text
         if 'username' in self.fields:
             self.fields['username'].help_text = None
+            self.fields['username'].label = None
         
         # Turn off the password bullet points (on 'password1')
         if 'password1' in self.fields:
             self.fields['password1'].help_text = None
             
         # (Optional) Turn off the password confirmation help text
-        # if 'password2' in self.fields:
-        #     self.fields['password2'].help_text = None
+        if 'password2' in self.fields:
+            self.fields['password2'].help_text = None
         
-        # if 'phone_number' in self.fields:
-        #     self.fields['phone_number'].help_text = 'Please enter your 10-digit phone number.'
-
-        # if 'previous_experience' in self.fields:
-        #     self.fields['previous_experience'].help_text = 'Select your total years of experience.'
+        if 'phone_number' in self.fields:
+            self.fields['phone_number'].help_text = None
+            
+        # Adding placeholders to the form fields
+        self.fields['username'].widget.attrs.update(
+            {'placeholder': 'Username'}
+        )
+        self.fields['email'].widget.attrs.update(
+            {'placeholder': 'Email address'}
+        )
+        self.fields['phone_number'].widget.attrs.update(
+            {'placeholder': 'Phone number'}
+        )
+        self.fields['password1'].widget.attrs.update(
+            {'placeholder': 'Password'}
+        )
+        self.fields['password2'].widget.attrs.update(
+            {'placeholder': 'Repeat Password'}
+        )
 
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(widget=forms.PasswordInput)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(
+            {'placeholder': 'Username'}
+        )
+        self.fields['password'].widget.attrs.update(
+            {'placeholder': 'Password'}
+        )
+        
 
 class MentorCreationForm(UserCreationForm):
     class Meta:
