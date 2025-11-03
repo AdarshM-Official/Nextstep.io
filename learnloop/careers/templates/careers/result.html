@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Career Result</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+
+<div class="bg-white w-full max-w-xl shadow-lg rounded-lg p-8 text-center">
+    
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        We've Analyzed Your Profile
+    </h2>
+    <p class="text-gray-600 mb-6">
+        Based on your answers, a great career path for you could be:
+    </p>
+
+    <div class="bg-indigo-50 border-l-4 border-indigo-500 text-indigo-900 p-6 rounded-lg mb-8">
+        <h3 class="text-4xl font-extrabold tracking-tight">
+            {{ career }}
+        </h3>
+    </div>
+
+    <a href="{% url 'career_predict' %}" 
+       class="bg-indigo-600 text-white font-semibold py-2 px-6 rounded hover:bg-indigo-700 transition duration-200 shadow">
+        Try Again
+    </a>
+
+</div>
+
+</body>
+</html>
