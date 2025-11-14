@@ -205,6 +205,9 @@ button:hover {
     .container.right-panel-active .sign-in-container { opacity: 0; }
     .container.right-panel-active .sign-up-container { opacity: 1; }
 }
+input[type="password"], input[type="text"] {
+    transition: 2s linear;
+}
 
 </style>
 </head>
@@ -285,6 +288,22 @@ document.addEventListener('DOMContentLoaded', () => {
     signInButton && signInButton.addEventListener('click', togglePanel);
     mobileSignUpButton && mobileSignUpButton.addEventListener('click', togglePanel);
     mobileSignInButton && mobileSignInButton.addEventListener('click', togglePanel);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Target all password fields from both forms
+    const passwordFields = document.querySelectorAll('input[type="password"]');
+
+    passwordFields.forEach(field => {
+        // Add hover-to-show behaviour
+        field.addEventListener("mouseenter", () => {
+            field.setAttribute("type", "text");
+        });
+        
+        field.addEventListener("mouseleave", () => {
+            field.setAttribute("type", "password");
+        });
+    });
 });
 </script>
 </body>

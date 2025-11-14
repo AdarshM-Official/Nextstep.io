@@ -87,7 +87,11 @@
         input[type="text"],
         input[type="email"], /* Assuming these types for fields */
         input[type="password"],
+        input[type="number"],
+        input[type="url"],
+        input[type="file"],
         select,
+        select option,
         textarea {
             width: calc(100% - 2.2rem); /* Account for padding */
             padding: 1.1rem; /* Taller inputs */
@@ -98,6 +102,7 @@
             background-color: var(--background-light); /* Light grey background for inputs */
             transition: border-color 0.2s, box-shadow 0.2s;
         }
+        
 
         input:focus,
         select:focus,
@@ -250,7 +255,11 @@
         }
         /* Hidden from default view for now */
         /* .messages { display: none; }  */
-
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 

@@ -30,5 +30,59 @@ class CustomUser(AbstractUser):
 
     is_approved=models.BooleanField(default=False)
     
+    
+    #Mentor related fields
+    gender = models.CharField(
+        max_length=20,
+        choices=[
+            ('male', 'Male'),
+            ('female', 'Female'),
+            ('other', 'Other'),
+            ('prefer_not_to_say', 'Prefer not to say'),
+        ],
+        blank=True
+    )
+    profile_photo = models.ImageField(upload_to='mentor_photos/', blank=True, null=True)
+
+    # Professional info
+    profession = models.CharField(max_length=100, blank=False, null=True)
+    experience_years = models.PositiveIntegerField(
+        null=True,
+        blank=False
+    )
+    expertise = models.CharField(
+        blank=False,
+        null=True,
+        max_length=100,
+        
+    )  
+    bio = models.CharField(
+        blank=False,
+        null=True,
+    )
+
+    linkedin = models.URLField(blank=True, null=True)
+    portfolio = models.URLField(blank=True, null=True)
+
+    # Mentorship availability
+    available_days = models.JSONField(default=list)  # ["mon", "wed", "fri"]
+    available_from = models.TimeField(default="09:00")
+    available_to = models.TimeField(default="17:00")
+
+    session_duration = models.CharField(
+        max_length=10,
+        choices=[
+            ('30', '30 Minutes'),
+            ('60', '60 Minutes'),
+        ],null=True, blank=False
+    )
+
+    intro_video = models.FileField(upload_to="mentor_videos/", blank=True, null=True)
+
+    # Auto timestamp
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True
+    )
     def __str__(self):
         return self.username

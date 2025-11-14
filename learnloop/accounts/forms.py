@@ -61,7 +61,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 class MentorCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'phone_number', 'previous_experience', 'password1', 'password2')
+        fields = ('username', 'email', 'phone_number', 'previous_experience','gender','profile_photo','profession','experience_years','expertise','bio','linkedin','portfolio','intro_video', 'password1', 'password2')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) # Call the parent's init first
@@ -105,6 +105,24 @@ class MentorCreationForm(UserCreationForm):
         )
         self.fields['password2'].widget.attrs.update(
             {'placeholder': 'Repeat Password'}
+        )
+        self.fields['profession'].widget.attrs.update(
+            {'placeholder': 'Profession'}
+        )
+        self.fields['experience_years'].widget.attrs.update(
+            {'placeholder': 'Years of Experience'}
+        )
+        self.fields['expertise'].widget.attrs.update(
+            {'placeholder': 'Area of Expertise'}
+        )
+        self.fields['bio'].widget.attrs.update(
+            {'placeholder': 'Brief Bio'}
+        )
+        self.fields['linkedin'].widget.attrs.update(
+            {'placeholder': 'LinkedIn Profile URL'}
+        )
+        self.fields['portfolio'].widget.attrs.update(
+            {'placeholder': 'Portfolio URL'}
         )
     def save(self, commit=True):
         user = super().save(commit=False)

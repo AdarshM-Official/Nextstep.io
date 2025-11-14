@@ -100,7 +100,7 @@ def mentor_dashboard(request):
     if request.user.role == 'mentor' and not request.user.is_approved:
         messages.error(request, "You must be approved by admin to access the mentor dashboard.")
         return redirect('mentor_auth')
-    return render(request, 'dashboard/mentor_dashboard.html')
+    return render(request, 'mentor/mentor_dashboard.html')
 
 @never_cache
 @login_required
@@ -142,3 +142,6 @@ def delete_mentor(request, mentor_id):
     mentor.delete()
     messages.success(request, f"Mentor '{mentor_username}' has been deleted successfully!")
     return redirect('admin_dashboard')
+
+
+#mentor related views

@@ -31,11 +31,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'career_predict' %}">Take Quiz</a></li>
+                    <li class="nav-item"><a class="nav-link" href="">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="">Take Quiz</a></li>
                     <li class="nav-item"><a class="nav-link" href="#careers">IT Careers</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'careers' %}">Career Roadmaps</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#opportunities">Opportunities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="">Mentor</a></li>
                     <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
                     <li class="nav-item"><a class="nav-link" href="#resources">Resources</a></li>
                     <li class="nav-item"><p>{{ request.user.username }}!</p></li>
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="questionnaire.html" class="btn btn-primary btn-lg mt-4 quiz-btn">
+                        <a href="{% url 'career_predict' %}" class="btn btn-primary btn-lg mt-4 quiz-btn">
                             <i class="fas fa-play"></i> Start Career Quiz Now
                         </a>
                     </div>
