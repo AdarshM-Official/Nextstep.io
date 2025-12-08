@@ -278,7 +278,7 @@
             </div>
             {% endif %}
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ mentor_signup.as_p }}
                 <button type="submit" name="mentor_submit">Register</button>

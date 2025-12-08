@@ -51,7 +51,7 @@ def mentor_auth_view(request):
 
     if request.method == 'POST':
         if 'mentor_submit' in request.POST:
-            mentor_signup = MentorCreationForm(request.POST)
+            mentor_signup = MentorCreationForm(request.POST or None,request.FILES)
             if mentor_signup.is_valid():
                 user = mentor_signup.save(commit=False)
                 user.role = 'mentor'

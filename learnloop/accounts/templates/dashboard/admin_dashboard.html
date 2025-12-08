@@ -422,59 +422,96 @@
         </div>
 
         <!-- Mentor Management Section -->
-        <div class="table-container section" id="mentors">
-            <h3>Mentor Management</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Experience</th>
-                        <th>Gender</th>
-                        <th>Profile Photo</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for mentor in all_mentors %}
-                    <tr>
-                        <td>{{ mentor.username }}</td>
-                        <td>{{ mentor.email }}</td>
-                        <td>{{ mentor.phone_number }}</td>
-                        <td>{% if mentor.previous_experience %}<span class="tag tag-yes">Yes</span>{% else %}<span
-                                class="tag tag-no">No</span>{% endif %}</td>
-                        <td>{{ mentor.gender }}</td>
-                        <td>
-                            {% if mentor.profile_photo and mentor.profile_photo.name %}
-                            <img src="{{ mentor.profile_photo.url }}" width="80" height="80">
-                            {% else %}
-                                <span>No photo</span>
-                            {% endif %}
-                        </td>
-                        <td>{% if mentor.is_approved %}<span class="tag tag-approved">Approved</span>{% else %}<span
-                                class="tag tag-pending">Pending</span>{% endif %}</td>
-                        <td>
-                            {% if not mentor.is_approved %}
-                            <a href="{% url 'approve_mentor' mentor.id %}" class="btn-approve">Approve Mentor</a>
-                            {% else %}
-                            <span style="color: var(--success-color); font-weight: 500;">✓ Approved</span>
-                            {% endif %}
-                            <a href="{% url 'delete_mentor' mentor.id %}"
-                                style="background-color:red; color:white; padding:6px 12px; border-radius:4px; text-decoration:none; margin-left:5px;"
-                                onclick="return confirm('Are you sure you want to delete {{ mentor.username }}?');">
-                                Delete</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" style="text-align:center;">No mentors found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+       <div class="table-container section" id="mentors">
+    <h3>Mentor Management</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Exp.</th> <th>Gender</th>
+                <th>Photo</th>
+                <th>Profession</th>
+                <th>Years</th>
+                <th>Expertise</th>
+                <th>Bio</th>
+                <th>LinkedIn</th> <th>Portfolio</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mentor in all_mentors %}
+            <tr>
+                <td>{{ mentor.username }}</td>
+                <td>{{ mentor.email }}</td>
+                <td>{{ mentor.phone_number }}</td>
+                <td>
+                    {% if mentor.previous_experience %}
+                        <span class="tag tag-yes">Yes</span>
+                    {% else %}
+                        <span class="tag tag-no">No</span>
+                    {% endif %}
+                </td>
+                <td>{{ mentor.gender }}</td>
+                <td>
+                    {% if mentor.profile_photo and mentor.profile_photo.name %}
+                        <img src="{{ mentor.profile_photo.url }}" width="80" height="80" style="object-fit: cover; border-radius: 4px;">
+                    {% else %}
+                        <span>No photo</span>
+                    {% endif %}
+                </td>
+                <td>{{ mentor.profession }}</td>
+                <td>{{ mentor.experience_years }}</td>
+                <td>{{ mentor.expertise }}</td>
+                <td>{{ mentor.bio|truncatechars:30 }}</td> <td>
+                    {% if mentor.linkedin %}
+                        <a href="{{ mentor.linkedin }}" target="_blank">View</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if mentor.portfolio %}
+                        <a href="{{ mentor.portfolio }}" target="_blank">Link</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                
+                <td>
+                    {% if mentor.is_approved %}
+                        <span class="tag tag-approved">Approved</span>
+                    {% else %}
+                        <span class="tag tag-pending">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="display: flex; gap: 5px;">
+                        {% if not mentor.is_approved %}
+                            <a href="{% url 'approve_mentor' mentor.id %}" class="btn-approve">Approve</a>
+                        {% else %}
+                            <!-- <span style="color: var(--success-color); font-weight: 500; font-size: 0.8rem;">✓ Done</span> -->
+                        {% endif %}
+                        <a href="{% url 'delete_mentor' mentor.id %}" 
+                           style="background-color: #e74c3c; color:white; padding:6px 12px; border-radius:4px; text-decoration:none;"
+                           onclick="return confirm('Are you sure?');">
+                           <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="14" style="text-align:center; padding: 30px;">
+                    No mentors found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
         <!-- Student Users Section -->
         <div class="table-container section" id="students">

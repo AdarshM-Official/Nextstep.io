@@ -42,7 +42,7 @@ class CustomUser(AbstractUser):
         ],
         blank=True
     )
-    profile_photo = models.ImageField(upload_to='mentor_photos/', blank=True, null=True)
+    profile_photo = models.ImageField(upload_to='mentor_photos/', blank=False, null=True)
 
     # Professional info
     profession = models.CharField(max_length=100, blank=False, null=True)

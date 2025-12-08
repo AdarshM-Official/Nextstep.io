@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Network</title>
+    <style>
+        /* --- Modern Neon-Glow IT Theme (Matching Provided Design) --- */
+
+        :root {
+            --bg1: #0d1224;
+            --bg2: #131b34;
+            --card: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.12);
+            --text: #e9ecf5;
+            --text-dim: #9aa4c7;
+            --brand1: #6a5cff;
+            --brand2: #c763ff;
+            --radius: 18px;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: radial-gradient(circle at top left, var(--bg2), var(--bg1));
+            color: var(--text);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--brand1), var(--brand2));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links a {
+            margin-left: 28px;
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--brand2);
+        }
+
+        /* HERO */
+        .mentor-hero {
+            padding: 90px 20px 40px;
+            text-align: left;
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .mentor-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            max-width: 600px;
+        }
+
+        .mentor-hero span {
+            background: linear-gradient(90deg, var(--brand1), var(--brand2));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .mentor-hero p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-top: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Mentor Grid */
+        .container { width: 90%; max-width: 1200px; margin: 50px auto; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 32px;
+        }
+
+        /* Mentor Card (Neomorphic Glow Style) */
+        .mentor-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: 0.35s ease;
+        }
+
+        .mentor-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 25px rgba(120,90,255,0.25);
+            border-color: var(--brand1);
+        }
+
+        .mentor-img-wrapper {
+            height: 190px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 18px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .mentor-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.35s ease;
+        }
+
+        .mentor-card:hover .mentor-img {
+            transform: scale(1.06);
+        }
+
+        .placeholder-img {
+            font-size: 3rem;
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+        }
+
+        .mentor-name { font-size: 1.25rem; font-weight: 700; }
+
+        .mentor-role { color: var(--text-dim); font-size: 0.95rem; margin: 10px 0 22px; }
+
+        .btn-mentor {
+            padding: 10px 26px;
+            border-radius: 50px;
+            border: 1px solid var(--brand1);
+            text-decoration: none;
+            color: var(--text);
+            transition: 0.3s ease;
+        }
+
+        .btn-mentor:hover {
+            background: linear-gradient(90deg, var(--brand1), var(--brand2));
+            border-color: transparent;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-logo">LearnLoop</div>
+    <div class="nav-links">
+        <a href="{% url 'user_dashboard' %}">Home</a>
+        <!-- <a href="#">Take Quiz</a>
+        <a href="#">IT Careers</a>
+        <a href="#">Career Roadmaps</a>
+        <a href="#">Mentor</a>
+        <a href="#">Skills</a>
+        <a href="#">Resources</a> -->
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<div class="mentor-hero">
+    <h1>Meet Your <span>Expert Mentors</span></h1>
+    <p>Learn from real industry professionals who guide you through your journey, step by confident step.</p>
+</div>
+
+<!-- MENTOR GRID -->
+<div class="container">
+    <div class="grid">
+        {% for mentor in mentors %}
+        <div class="mentor-card">
+            <div class="mentor-img-wrapper">
+                {% if mentor.profile_photo %}
+                    <img src="{{ mentor.profile_photo.url }}" class="mentor-img" alt="{{ mentor.username }}">
+                {% else %}
+                    <div class="placeholder-img">👤</div>
+                {% endif %}
+            </div>
+
+            <h3 class="mentor-name">
+                {{ mentor.first_name }} {{ mentor.last_name }}
+                {% if not mentor.first_name %}{{ mentor.username }}{% endif %}
+            </h3>
+
+            <p class="mentor-role">{{ mentor.email|truncatechars:25 }}</p>
+
+            <a href="{% url 'mentor_detail' mentor.id %}" class="btn-mentor">View Profile</a>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <h2>No mentors available right now.</h2>
+            <p>Come back later — the best are worth waiting for.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+{% block content %}
+
+<style>
+    /* --- Background Styling --- */
+    body {
+        background: radial-gradient(circle at top left, #283048, #1b1b2f 60%, #0f0f17);
+        color: #eaeaea;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .mentor-wrapper {
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 20px;
+        animation: fadeIn 0.8s ease;
+    }
+
+    /* --- Glassmorphic Card --- */
+    .mentor-card {
+        backdrop-filter: blur(14px);
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 25px rgba(120, 80, 255, 0.25);
+        transition: 0.3s ease;
+    }
+
+    /* .mentor-card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 40px rgba(120, 80, 255, 0.35);
+    } */
+
+    .mentor-photo img {
+        border-radius: 18px;
+        box-shadow: 0 0 18px rgba(120, 80, 255, 0.3);
+        margin-right: 50px;
+        width: fit-content;
+        height: fit-content;
+    }
+    .mentor-photo img {
+    border-radius: 18px;
+    box-shadow: 0 0 18px rgba(120, 80, 255, 0.3);
+    width: 100%;          /* ensures it fits the column width */
+    max-width: 250px;     /* optional: limits how large it can grow */
+    height: auto;         /* maintains aspect ratio */
+    object-fit: cover;    /* ensures it fills the space without distortion */
+    display: block;       /* removes inline spacing issues */
+    /* margin: 0 auto;       centers the image horizontally */
+    float: left;
+}
+
+    /* --- Text Styling --- */
+    .mentor-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .mentor-role {
+        color: #b8b8ff;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    p {
+        color: #d7d7d7;
+        font-size: 1rem;
+    }
+
+    /* --- Button --- */
+    .btn-glow {
+        background: linear-gradient(90deg, #6a5af9, #a565ff);
+        border: none;
+        color: white;
+        padding: 12px 26px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.25s;
+        box-shadow: 0 0 12px rgba(130, 80, 255, 0.4);
+    }
+
+    .btn-glow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 18px rgba(160, 100, 255, 0.6);
+    }
+
+    .linkedin-link a {
+        color: #9f8cff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .linkedin-link a:hover {
+        text-decoration: underline;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="mentor-wrapper">
+
+    <div class="mentor-card">
+        <div class="row align-items-center">
+
+            <!-- Profile Photo -->
+            <div class="col-md-4 mentor-photo">
+                {% if mentor.profile_photo %}
+                <img src="{{ mentor.profile_photo.url }}" class="img-fluid">
+                {% endif %}
+            </div>
+
+            <!-- Content -->
+            <div class="col-md-8">
+                <h2 class="mentor-name">{{ mentor.username }}</h2>
+                <h5 class="mentor-role">{{ mentor.profession }}</h5>
+
+                <p><strong>Expertise:</strong> {{ mentor.expertise }}</p>
+                <p><strong>Experience:</strong> {{ mentor.experience_years }} years</p>
+                <p>{{ mentor.bio }}</p>
+
+                <a href="{% url 'book_appointment' mentor.id %}" class="btn btn-glow mt-3">Book Appointment</a>
+
+                {% if mentor.linkedin %}
+                <p class="mt-4 linkedin-link">
+                    <a href="{{ mentor.linkedin }}" target="_blank">View LinkedIn →</a>
+                </p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
